@@ -1,4 +1,4 @@
-require 'skelerl/version'
+require 'skelerl'
 
 AUTHOR = 'Ari Lerner'  # can also be an array of Authors
 EMAIL = "arilerner@mac.com"
@@ -70,4 +70,4 @@ CHANGES = $hoe.paragraphs_of('History.txt', 0..1).join("\\n\\n")
 PATH    = (RUBYFORGE_PROJECT == GEM_NAME) ? RUBYFORGE_PROJECT : "#{RUBYFORGE_PROJECT}/#{GEM_NAME}"
 $hoe.remote_rdoc_dir = File.join(PATH.gsub(/^#{RUBYFORGE_PROJECT}\/?/,''), 'rdoc')
 $hoe.rsync_args = '-av --delete --ignore-errors'
-$hoe.spec.post_install_message = File.open(File.dirname(__FILE__) + "/../PostInstall.txt").read rescue ""
+$hoe.spec.post_install_message = ""

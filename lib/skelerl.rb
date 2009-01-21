@@ -3,4 +3,8 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 module Skelerl
   
+  module VERSION
+    STRING = "0.0.1"
+  end
+  
 end
