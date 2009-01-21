@@ -1,0 +1,19 @@
+{application, <%= @name %>,
+  [
+		% Quick description of the server
+		{description, "<%= @description %>"},
+		% Version
+		{vsn, "<%= @version %>"},
+		% All modules used by the application.  
+		{modules, [<%= @modules %>]},
+		% All the registered names in the application
+		{registered, [<%= @registered %>]},
+		% These must be started for application to run
+		{applications, [kernel, stdlib]},
+		% Environment vars
+		{env, []},
+		% Module and Args used to start
+		{mod, {<%= @modules %>, []}},
+		{start_phases, []}
+	]
+}.

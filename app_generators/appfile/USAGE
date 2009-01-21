@@ -1,0 +1,5 @@
+Description:
+  Create a basic .app file for erlang. This is just a quick generator to help get your .app file built
+  
+Usage:
+  ./script/generate appfile <name>
