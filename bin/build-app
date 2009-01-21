@@ -8,6 +8,9 @@ if ARGV.size > 0
   @version = ARGV.shift || "0.1"
 end
 
+@version ||= "0.1"
+@name ||= ::File.basename(::File.dirname( root_dir ))
+
 INCLUDE = "include"
 ERLC_FLAGS = "-I#{INCLUDE}"
 
