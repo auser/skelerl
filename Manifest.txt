@@ -1,7 +1,6 @@
 History.txt
 Manifest.txt
 PostInstall.txt
-README
 README.rdoc
 Rakefile
 bin/build-app
