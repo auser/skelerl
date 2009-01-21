@@ -32,3 +32,12 @@ namespace :manifest do
     `rake check_manifest | patch -p0 > Manifest.txt`
   end
 end
+
+desc "Generate gemspec"
+task :gemspec  => [:"manifest:refresh", :package] do |t|
+  res = %x[rake debug_gem]
+  res = res.split("\n")[1..-1].join("\n")
+  ::File.open("#{GEM_NAME.downcase}.gemspec", "w+") do |f|
+    f << res
+  end
+end
