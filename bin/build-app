@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+$:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+
+root_dir = ::File.expand_path( ::File.join(::File.dirname(__FILE__), "..", "ebin") )
+
+if ARGV.size > 0
+  @name = ARGV.shift
+  @version = ARGV.shift || "0.1"
+end
+
+INCLUDE = "include"
+ERLC_FLAGS = "-I#{INCLUDE}"
+
+# erl -pa ./ebin/ -run pm_packager recompile_scripts #{@version} -run init stop -noshell
+# erlc -pa ./ebin -o ebin ./src/*.erl
+# erl -pa ./ebin -s pm_packager start -s init stop
+cmd = "cd #{root_dir} && NAME=#{@name} VERSION=#{@version} rake build_boot_scripts"
+
+puts "** Building #{@name} **"
+puts "Running command #{cmd}"
+
+out = %x[#{cmd}]
+puts out
