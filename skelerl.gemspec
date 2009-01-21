@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.description = %q{This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... hopefully.}
   s.email = ["arilerner@mac.com"]
   s.executables = ["build-app"]
-  s.extra_rdoc_files = ["History.txt", "Manifest.txt"]
-  s.files = ["History.txt", "Manifest.txt", "README.rdoc", "Rakefile", "bin/build-app", "config/hoe.rb", "config/requirements.rb", "ebin/packager.app", "include/empty", "lib/skelerl.rb", "setup.rb", "src/packager.erl", "tasks/deployment.rake", "tasks/environment.rake", "tasks/skelerl.rake", "tasks/website.rake"]
+  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt"]
+  s.files = ["History.txt", "Manifest.txt", "README.txt", "Rakefile", "bin/build-app", "config/hoe.rb", "config/requirements.rb", "ebin/packager.app", "include/empty", "lib/skelerl.rb", "setup.rb", "skelerl.gemspec", "src/packager.erl", "tasks/deployment.rake", "tasks/environment.rake", "tasks/skelerl.rake", "tasks/website.rake"]
   s.has_rdoc = true
   s.homepage = %q{http://skelerl.rubyforge.org}
   s.post_install_message = %q{}

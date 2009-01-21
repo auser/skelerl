@@ -1,6 +1,6 @@
 History.txt
 Manifest.txt
-README.rdoc
+README.txt
 Rakefile
 bin/build-app
 config/hoe.rb
@@ -9,6 +9,7 @@ ebin/packager.app
 include/empty
 lib/skelerl.rb
 setup.rb
+skelerl.gemspec
 src/packager.erl
 tasks/deployment.rake
 tasks/environment.rake
