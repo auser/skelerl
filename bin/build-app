@@ -22,5 +22,4 @@ cmd = "cd #{root_dir} && NAME=#{@name} VERSION=#{@version} rake build_boot_scrip
 puts "** Building #{@name} **"
 puts "Running command #{cmd}"
 
-out = %x[#{cmd}]
-puts out
+%x[#{cmd}]
