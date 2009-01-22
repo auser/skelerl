@@ -1,4 +1,4 @@
-class AppfileGenerator < RubiGen::Base
+class GenServerGenerator < RubiGen::Base
 
   DEFAULT_SHEBANG = File.join(Config::CONFIG['bindir'],
                               Config::CONFIG['ruby_install_name'])
@@ -18,16 +18,14 @@ class AppfileGenerator < RubiGen::Base
 
   def manifest
     record do |m|
-      m.template "appfile.app", "ebin/#{@app_name}.app"
-
-      # m.dependency "install_rubigen_scripts", [destination_root, 'appfile'], :shebang => options[:shebang], :collision => :force
+      m.file "gen_server.erl"
     end
   end
 
   protected
     def banner
       <<-EOS
-Creates a basic .app file
+Creates a skeleton gen_server
 
 USAGE: #{spec.name} name
 EOS
@@ -41,10 +39,6 @@ EOS
       # opts.on("-a", "--author=\"Your Name\"", String,
       #         "Some comment about this option",
       #         "Default: none") { |options[:author]| }
-      opts.on("-n", "--name", "Name the app") { |options[:app_name]| }
-      opts.on("-d", "--desc", "Description of the app") { |options[:description]| }
-      opts.on("-m", "--modules", "Modules used in the application") { |options[:modules]| }
-      opts.on("-r", "--registered", "Modules registered in the application") { |options[:registered]| }
       opts.on("-v", "--version", "Show the #{File.basename($0)} version number and quit.")
     end
 
@@ -53,9 +47,5 @@ EOS
       # Templates can access these value via the attr_reader-generated methods, but not the
       # raw instance variable value.
       # @author = options[:author]
-      @description = options[:desc] || "Description of your project"
-      @version = options[:version] || "0.1"
-      @modules = options[:modules] || "#{@name}_app"
-      @registered = options[:registered] || ""
     end
 end

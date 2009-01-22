@@ -1,0 +1,7 @@
+Description:
+
+Create a skeleton gen_server file
+  
+Usage:
+  
+./script/generate gen_server <name>
