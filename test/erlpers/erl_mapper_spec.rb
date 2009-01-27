@@ -27,7 +27,7 @@ class ErlMapperTest < Test::Unit::TestCase
             assert_equal @mapper.with_node(:node0).sname, :node0
           end
           it "should append the name to the MappingContext's string" do
-            assert_equal @mapper.with_node(:node0).build_string, "erl -sname node0 -pa ./ebin "
+            assert_equal "erl -sname node0 -pa ./ebin ", @mapper.with_node(:node0).build_string
           end
           
           context "context" do

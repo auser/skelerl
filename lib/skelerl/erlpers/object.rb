@@ -9,8 +9,13 @@ class Object
   def erlang parent=self, &block
     context_stack.push parent
     mapper = block ? ErlMapper.new(&block) : nil
+    mappers << mapper
     context_stack.pop
     mapper
+  end
+  
+  def mappers
+    $mappers ||= []
   end
   
   # Context stack so we can keep track of the context

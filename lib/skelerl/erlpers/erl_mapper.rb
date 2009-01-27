@@ -1,6 +1,6 @@
 class ErlMapper
   include Dslify
-  
+
   def initialize(&block)
     instance_eval &block if block
   end
@@ -10,7 +10,7 @@ class ErlMapper
     :sname => "node0",
     :cookie => nil,
     :stop => true,
-    :testing => true
+    :testing => false
   })
   
   def self.erl_methods(hash={})
@@ -25,8 +25,33 @@ class ErlMapper
     instance_eval &block if block
   end
   
+  def contexts
+    @contexts ||= []
+  end
+  
   def with_node(name="node0", opts={}, &block)
-    MappingContext.new name, __options, &block
+    returning MappingContext.new(name, __options, &block) do |mc|
+      contexts << mc
+    end
+  end
+  
+  def realize
+    contexts.collect {|mc| testing ? mc.string : daemonize(mc.string) }
+  end
+  
+  def daemonize(cmd, &block)
+    pid = fork do
+      Signal.trap('HUP', 'IGNORE') # Don't die upon logout
+      File.open("/dev/null", "r+") do |devnull|
+        $stdout.reopen(devnull)
+        $stderr.reopen(devnull)
+        $stdin.reopen(devnull) unless @use_stdin
+      end
+      Kernel.system cmd
+      block.call if block
+    end
+    Process.detach(pid)
+    pid
   end
   
 end
@@ -45,7 +70,7 @@ class MappingContext < ErlMapper
   end
   
   def string
-    "#{build_string} #{start_commands} #{final_commands}"
+    "#{build_string} #{start_commands} #{final_commands}".strip
   end
   
   def final_commands
@@ -60,8 +85,7 @@ class MappingContext < ErlMapper
   end
   
   def get_opt_name(k)
-    puts methods.include?("erl_#{k}".to_sym)
-    methods.include?("erl_#{k}".to_sym) ? self.send("erl_#{k}".to_sym) : "#{k}"
+    methods.include?("erl_#{k}") ? self.send("erl_#{k}".to_sym) : "#{k}"
   end
   
   def opts;@opts ||= {};end
