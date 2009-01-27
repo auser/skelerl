@@ -1,15 +1,26 @@
 #!/usr/bin/env ruby
+require "#{::File.dirname(__FILE__)}/../lib/skelerl"
+require 'rubygems'
+require 'optparse'
 
-if ARGV.size != 1
-  puts <<-EOU
-  Usage:
-    #{File.basename(__FILE__, File.extname(__FILE__))} <filename>
-  EOU
-  exit
-else
-  instance_eval open(ARGV.pop).read
+@opts = OptionParser.new
+progname = File.basename(__FILE__, File.extname(__FILE__))
   
-  mappers.each do |mapper|
-    mapper.realize
-  end
+
+@opts.on('-v', '--verbose', 'Be verbose')    { @verbose = true }  
+@opts.on('-t', '--test', 'Put in test mode')    { @testing = true }  
+
+@opts.on_tail("-h", "--help", "Show this message") do
+  puts <<-EOP
+    Usage: #{progname} <filename> [options]
+  EOP
+  exit
+end
+
+@opts.parse(ARGV.dup)
+
+instance_eval open(ARGV.pop).read
+
+mappers.each do |mapper|
+  @testing ? puts(mapper.realize(@testing)) : mapper.realize(@testing)  
 end

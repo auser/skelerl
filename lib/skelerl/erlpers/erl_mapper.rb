@@ -9,12 +9,10 @@ class ErlMapper
     :path => "./ebin",
     :sname => "node0",
     :cookie => nil,
-    :stop => true,
     :testing => false
   })
   
   def self.erl_methods(hash={})
-    puts "in erl_methods with #{hash}"
     hash.each {|k,v| define_method "erl_#{k}" do;"#{v}";end}
   end
   
@@ -30,13 +28,13 @@ class ErlMapper
   end
   
   def with_node(name="node0", opts={}, &block)
-    returning MappingContext.new(name, __options, &block) do |mc|
+    returning MappingContext.new(name, __options.merge(opts), &block) do |mc|
       contexts << mc
     end
   end
   
-  def realize
-    contexts.collect {|mc| testing ? mc.string : daemonize(mc.string) }
+  def realize(force_testing=false)
+    contexts.collect {|mc| (force_testing || testing) ? mc.string : daemonize(mc.string) }
   end
   
   def daemonize(cmd, &block)
@@ -84,12 +82,10 @@ class MappingContext < ErlMapper
       "erl #{opts.collect {|k,v| "-#{get_opt_name(k)} #{v} " if v && v.is_a?(String)}}"
   end
   
-  def get_opt_name(k)
-    methods.include?("erl_#{k}") ? self.send("erl_#{k}".to_sym) : "#{k}"
-  end
+  def get_opt_name(k);methods.include?("erl_#{k}") ? self.send("erl_#{k}".to_sym) : "#{k}";end
   
   def opts;@opts ||= {};end
-  def start_commands;@commands.collect {|c| "-s #{c}"};end
+  def start_commands;commands.collect {|c| "-s #{c}"};end
   def commands;@commands ||= [];end
   
   def method_missing(m, *args, &block)
