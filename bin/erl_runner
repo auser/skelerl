@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+if ARGV.size != 1
+  puts <<-EOU
+  Usage:
+    #{File.basename(__FILE__, File.extname(__FILE__))} <filename>
+  EOU
+  exit
+else
+  instance_eval open(ARGV.pop).read
+  
+  mappers.each do |mapper|
+    mapper.realize
+  end
+end
