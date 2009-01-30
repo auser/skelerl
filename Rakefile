@@ -5,4 +5,3 @@ rescue Exception => e
 end
 
 Dir['tasks/**/*.rake'].each { |rake| load rake }
-

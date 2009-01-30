@@ -1,32 +1,63 @@
+# modified from http://21ccw.blogspot.com/2008/04/using-rake-for-erlang-unit-testing.html
 require 'rake/clean'
+require 'pp'
 
-INCLUDE = "include"
+INCLUDE    = File.dirname(__FILE__) + "/include"
 ERLC_FLAGS = "-I#{INCLUDE} +warn_unused_vars +warn_unused_import"
 
-SRC = FileList['src/*.erl']
-OBJ = SRC.pathmap("%{src,ebin}X.beam")
-CLEAN.include("ebin/*.beam")
+SRC        = FileList['src/*.erl']
+SRC_OBJ    = SRC.pathmap("%{src,ebin}X.beam")
+
+TEST       = FileList['test/src/*.erl']
+TEST_OBJ   = TEST.pathmap("%{src,ebin}X.beam")
+
+CLEAN.include("ebin/*.beam", "test/ebin/*.beam")
 
 directory 'ebin'
+directory 'test/ebin'
 
-rule ".beam" =>  ["%{ebin,src}X.erl"] do |t|
-  sh "erlc -pa ebin -W #{ERLC_FLAGS} -o ebin #{t.source}"
+rule( ".beam" => ["%{ebin,src}X.erl"] ) do |t|
+  testing  = t.source =~ /test\// ? true : false
+  eunit    = testing ? "-D EUNIT "  : ""
+  ebin_dir = testing ? "test/ebin"  : "ebin"
+  cmd = "erlc #{eunit}-pa ebin -W #{ERLC_FLAGS} -o #{ebin_dir} #{t.source}"
+  puts cmd
+  sh cmd
 end
 
-task :default => :compile
+desc "Compile everything"
+task :compile   => ["src:compile", "test:compile"]
+task :recompile => ["clean", "src:compile", "test:compile"]
 
-desc "Run the tests"
-task :run_tests => [:compile] do
-  OBJ.each do |obj|
+namespace :src do
+  desc "Compile src"
+  task :compile => ['ebin'] + SRC_OBJ
+end
+
+namespace :test do
+  desc "Compile tests"
+  task :compile => ['test/ebin'] + TEST_OBJ
+end
+
+desc "Run all tests"
+task :run_tests => :compile do
+  puts "Modules under test:"
+  TEST_OBJ.each do |obj|
     obj[%r{.*/(.*).beam}]
     mod = $1
-    test_output = `erl -pa ebin -run #{mod} test -run init stop`
+    test_cmd = "erl -pa ebin -pa test/ebin -run #{mod} test -run init stop"
+    puts test_cmd
+    test_output = `#{test_cmd}`
+    
+    puts test_output if Rake.application.options.trace
 
     if /\*failed\*/ =~ test_output
       test_output[/(Failed.*Aborted.*Skipped.*Succeeded.*$)/]
     else
       test_output[/1>\s*(.*)\n/]
     end
+
+    puts "#{mod}: #{$1}"
   end
 end
 
@@ -38,9 +69,6 @@ end
 
 desc "Recompile the sources"
 task :recompile => [:clean, :compile]
-
-desc "Compile all the sources"
-task :compile => ['ebin'] + OBJ
 
 desc "Compile with the DEBUG flag set to true"
 task :compile_debug do
@@ -64,11 +92,5 @@ end
 desc "Rebuild and repackage"
 task :repackage => [:build_boot_scripts] do  
   cmd = "erl -pa ./ebin -s packager start -s init stop"
-  Kernel.system cmd
-end
-
-desc "Install messenger"
-task :install_messenger do
-  cmd = "erl -pa ./ebin/ -run packager install_messenger #{@version} -run init stop -noshell"
   Kernel.system cmd
 end
