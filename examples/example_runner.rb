@@ -1,9 +1,11 @@
+$:.unshift(File.dirname(__FILE__)+"/../lib")
+require "rubygems"
+require "skelerl"
 
 erlang do
-  options do 
-    path  "ebin"
-    cookie "chordjerl"
-  end
+  testing true
+  
+  options :path => "./ebin", :cookie => "chordjerl"
   
   with_node(:node0, :stop => false) do
     start

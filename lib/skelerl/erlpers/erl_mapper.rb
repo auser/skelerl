@@ -1,7 +1,8 @@
 class ErlMapper
   include Dslify
 
-  def initialize(&block)
+  def initialize(opts={}, &block)
+    @opts = opts
     instance_eval &block if block
   end
   
@@ -9,8 +10,10 @@ class ErlMapper
     :path => "./ebin",
     :sname => "node0",
     :cookie => nil,
-    :testing => false
+    :stop => true
   })
+  
+  def opts;@opts ||= {};end
   
   def self.erl_methods(hash={})
     hash.each {|k,v| define_method "erl_#{k}" do;"#{v}";end}
@@ -73,7 +76,7 @@ class MappingContext < ErlMapper
   
   def final_commands
     returning Array.new do |arr|
-      arr << "-s init stop" if opts.has_key?(:stop) && opts[:stop]
+      arr << "-s init stop" if (opts.has_key?(:stop) && opts[:stop])
     end.join(" ")
   end
     
@@ -83,8 +86,7 @@ class MappingContext < ErlMapper
   end
   
   def get_opt_name(k);methods.include?("erl_#{k}") ? self.send("erl_#{k}".to_sym) : "#{k}";end
-  
-  def opts;@opts ||= {};end
+    
   def start_commands;commands.collect {|c| "-s #{c}"};end
   def commands;@commands ||= [];end
   

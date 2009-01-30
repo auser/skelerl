@@ -11,7 +11,12 @@ class Object
     mapper = block ? ErlMapper.new(&block) : nil
     mappers << mapper
     context_stack.pop
-    mapper
+    
+    testing ? puts(mapper.realize(true)) : mapper.realize(false)  
+  end
+  
+  def testing bool=false
+    @@testing ||= bool
   end
   
   def mappers
