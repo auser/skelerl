@@ -61,9 +61,10 @@ class MappingContext < ErlMapper
   attr_accessor :sname, :parent
   
   def initialize(name, opts={}, &block)
-    @sname = name
+    @__name = name
     @opts = opts
     instance_eval &block if block
+    @sname ||= @__name
   end
   
   def namespace name, &block
@@ -98,6 +99,6 @@ end
 
 class Namespace < MappingContext
   def start_commands
-    commands.collect {|c| "-s #{namespace}:#{c}"}
+    commands.collect {|c| "-s #{@__name}:#{c}"}
   end
 end

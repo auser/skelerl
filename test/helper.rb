@@ -6,3 +6,5 @@ require 'matchy'
 require 'context'
 
 require "skelerl"
+
+testing true

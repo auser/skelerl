@@ -16,7 +16,7 @@ class Object
   end
   
   def testing bool=false
-    @@testing ||= bool
+    $testing ||= bool
   end
   
   def mappers

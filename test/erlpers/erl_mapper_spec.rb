@@ -69,10 +69,12 @@ class ErlMapperTest < Test::Unit::TestCase
     
     context "Namespace" do
       setup do
-        @namespace = Namespace.new("chordjerl_srv", {:sname => "name_of_server"})
+        @namespace = Namespace.new("chordjerl_srv") do
+          start
+        end
       end
       it "should keep the namespace on the command" do
-        assert_equal "erl -sname name_of_server", @namespace.string
+        assert_equal "erl  -s chordjerl_srv:start", @namespace.string
       end
     end
     
