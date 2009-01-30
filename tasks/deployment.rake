@@ -34,7 +34,7 @@ namespace :manifest do
 end
 
 desc "Generate gemspec"
-task :gemspec  => [:"manifest:refresh", :package] do |t|
+task :gemspec  => [:"manifest:refresh"] do |t|
   res = %x[rake debug_gem]
   res = res.split("\n")[1..-1].join("\n")
   ::File.open("#{GEM_NAME.downcase}.gemspec", "w+") do |f|
