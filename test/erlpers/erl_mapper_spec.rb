@@ -53,7 +53,13 @@ class ErlMapperTest < Test::Unit::TestCase
                 @context = @mapper.with_node(:node0, :stop => false) do
                   everything.but_the "sink"
                 end
-                assert_equal "erl -sname node0 -pa ./ebin -s everything but_the sink ", @context.string
+                assert_equal "erl -sname node0 -pa ./ebin -s everything but_the sink", @context.string
+              end
+              it "should build the commands without an argument" do
+                @context = @mapper.with_node(:node0, :stop => false) do
+                  once.in_a_lifetime
+                end
+                assert_equal "erl -sname node0 -pa ./ebin -s once in_a_lifetime", @context.string
               end
             end
             
@@ -86,7 +92,7 @@ class ErlMapperTest < Test::Unit::TestCase
         end
       end
       it "should keep the namespace on the command" do
-        assert_equal "erl -s chordjerl_srv:start ", @namespace.string
+        assert_equal "erl -s chordjerl_srv:start", @namespace.string
       end
     end
     

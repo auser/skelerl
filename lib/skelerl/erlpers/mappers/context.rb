@@ -11,7 +11,7 @@ class MappingContext < ErlMapper
   def string
     returning Array.new do |arr|
       %w(build_string start_commands final_commands).each {|meth| arr << self.send(meth).strip }
-    end.join(" ")
+    end.join(" ").strip
   end
   
   def final_commands
