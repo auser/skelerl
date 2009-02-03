@@ -14,6 +14,10 @@ h2. Building an application
 3. Type: ./bin/build-app [name] [version]
 4. There is no fourth step
 
+Erlang start script in ruby
+
+Example coming shortly
+
 == INSTALL:
 
 sudo gem install auser-skelerl

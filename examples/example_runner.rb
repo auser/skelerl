@@ -11,8 +11,14 @@ erlang do
     start
   end
   
+  with_node(:node2) do
+    erlang_module.go
+  end
+  
   with_node(:node1) do
-    start
+    namespace :erlang_module do
+      start
+    end
   end
   
 end
