@@ -1,3 +1,5 @@
+Dir["#{File.dirname(__FILE__)}/core/*.rb"].each {|f| require f if ::File.file? f}
+
 class ErlMapper
   include Dslify
 
@@ -30,6 +32,10 @@ class ErlMapper
     @contexts ||= []
   end
   
+  def namespace name, &block
+    Namespace.new(name, @opts, &block)
+  end
+  
   def with_node(name="node0", opts={}, &block)
     returning MappingContext.new(name, __options.merge(opts), &block) do |mc|
       contexts << mc
@@ -57,48 +63,4 @@ class ErlMapper
   
 end
 
-class MappingContext < ErlMapper
-  attr_accessor :sname, :parent
-  
-  def initialize(name, opts={}, &block)
-    @__name = name
-    @opts = opts
-    instance_eval &block if block
-    @sname ||= @__name
-  end
-  
-  def namespace name, &block
-    Namespace.new(name, @opts, &block)
-  end
-  
-  def string
-    "#{build_string} #{start_commands} #{final_commands}".strip
-  end
-  
-  def final_commands
-    returning Array.new do |arr|
-      arr << "-s init stop" if (opts.has_key?(:stop) && opts[:stop])
-    end.join(" ")
-  end
-    
-  def build_string
-    @build_string ||= 
-      "erl #{opts.collect {|k,v| "-#{get_opt_name(k)} #{v} " if v && v.is_a?(String)}}"
-  end
-  
-  def get_opt_name(k);methods.include?("erl_#{k}") ? self.send("erl_#{k}".to_sym) : "#{k}";end
-    
-  def start_commands;commands.collect {|c| "-s #{c}"};end
-  def commands;@commands ||= [];end
-  
-  def method_missing(m, *args, &block)
-    command = "#{m}#{ " #{args.join(" ")}" unless args.empty?}"
-    commands.push command
-  end
-end
-
-class Namespace < MappingContext
-  def start_commands
-    commands.collect {|c| "-s #{@__name}:#{c}"}
-  end
-end
+Dir["#{File.dirname(__FILE__)}/mappers/*.rb"].each {|f| require f if ::File.file? f}

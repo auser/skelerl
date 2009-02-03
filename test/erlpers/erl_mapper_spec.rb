@@ -27,7 +27,7 @@ class ErlMapperTest < Test::Unit::TestCase
             assert_equal @mapper.with_node(:node0).sname, :node0
           end
           it "should append the name to the MappingContext's string" do
-            assert_equal "erl -sname node0 -pa ./ebin ", @mapper.with_node(:node0).build_string
+            assert_equal @mapper.with_node(:node0).build_string.strip, "erl -sname node0 -pa ./ebin"
           end
           
           context "context" do
@@ -35,13 +35,25 @@ class ErlMapperTest < Test::Unit::TestCase
             
             describe "with start_commands" do            
               it "should have the start_commands on the MappingContext" do              
-                assert_equal @context.commands, ["start"]
+                assert_equal @context.commands.flatten, ["start"]
               end
               it "should have multiple when multiple are called" do
                 @context.instance_eval do
-                  chordjerl_srv:start
+                  chordjerl_srv.start_link
                 end
-                assert_equal @context.commands, ["start", "chordjerl_srv start"]
+                assert_equal ["start","chordjerl_srv","start_link"], @context.commands.flatten
+              end
+              it "should include arguments" do
+                @context = @mapper.with_node(:node0) do
+                  dark.and_stormy "night"
+                end
+                assert_equal [["dark",["and_stormy","night"]]], @context.commands
+              end
+              it "should build the commands with 1 -s" do
+                @context = @mapper.with_node(:node0, :stop => false) do
+                  everything.but_the "sink"
+                end
+                assert_equal "erl -sname node0 -pa ./ebin -s everything but_the sink ", @context.string
               end
             end
             
@@ -74,7 +86,7 @@ class ErlMapperTest < Test::Unit::TestCase
         end
       end
       it "should keep the namespace on the command" do
-        assert_equal "erl  -s chordjerl_srv:start", @namespace.string
+        assert_equal "erl -s chordjerl_srv:start ", @namespace.string
       end
     end
     
