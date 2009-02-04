@@ -19,8 +19,12 @@ examples/example_runner.rb
 include/empty
 lib/skelerl.rb
 lib/skelerl/core/object.rb
+lib/skelerl/erlpers/core/array.rb
+lib/skelerl/erlpers/core/object.rb
 lib/skelerl/erlpers/erl_mapper.rb
-lib/skelerl/erlpers/object.rb
+lib/skelerl/erlpers/mappers/command.rb
+lib/skelerl/erlpers/mappers/context.rb
+lib/skelerl/erlpers/mappers/namespace.rb
 lib/skelerl/init.rb
 script/generate
 setup.rb

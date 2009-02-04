@@ -46,7 +46,6 @@ task :run_tests => :compile do
     obj[%r{.*/(.*).beam}]
     mod = $1
     test_cmd = "erl -pa ebin -pa test/ebin -run #{mod} test -run init stop"
-    puts test_cmd
     test_output = `#{test_cmd}`
     
     puts test_output if Rake.application.options.trace
