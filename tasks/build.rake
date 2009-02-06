@@ -2,11 +2,14 @@
 require 'rake/clean'
 require 'pp'
 
-INCLUDE    = File.dirname(__FILE__) + "/include"
 deps_dir   = Dir.pwd + "/deps"
+
+INCLUDE    = File.dirname(__FILE__) + "/include"
+
 DEPS       = Dir["#{deps_dir}/*"].select {|d| d if File.directory? d }
 DEPS_FILES = DEPS.map {|d| "./deps/#{File.basename(d)}" }
 EXTRA_ERLC = DEPS_FILES.map {|a| "-pa #{a}/ebin" }.join(" ")
+
 ERLC_FLAGS = "-I#{INCLUDE} +warn_unused_vars +warn_unused_import -o ebin -W0 #{EXTRA_ERLC}"
 
 SRC        = FileList["src/*.erl"]
@@ -106,6 +109,11 @@ desc "Rebuild and repackage"
 task :repackage => [:build_boot_scripts] do  
   cmd = "erl -pa ./ebin -s packager start -s init stop"
   Kernel.system cmd
+end
+
+desc "Shell command"
+task :shell do
+  cmd = "erl -pa ./ebin #{EXTRA_ERLC}"
 end
 
 desc "Build a basic app structure"
