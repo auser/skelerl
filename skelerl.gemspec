@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ari Lerner"]
-  s.date = %q{2009-02-04}
+  s.date = %q{2009-02-06}
   s.description = %q{This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... hopefully.}
   s.email = ["arilerner@mac.com"]
   s.executables = ["appfile", "build-app", "erl_runner", "gen_server"]
