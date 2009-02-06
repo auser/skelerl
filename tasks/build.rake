@@ -3,9 +3,13 @@ require 'rake/clean'
 require 'pp'
 
 INCLUDE    = File.dirname(__FILE__) + "/include"
-ERLC_FLAGS = "-I#{INCLUDE} +warn_unused_vars +warn_unused_import"
+deps_dir   = Dir.pwd + "/deps"
+DEPS       = Dir["#{deps_dir}/*"].select {|d| d if File.directory? d }
+DEPS_FILES = DEPS.map {|d| "./deps/#{File.basename(d)}" }
+EXTRA_ERLC = DEPS_FILES.map {|a| "-pa #{a}/ebin" }.join(" ")
+ERLC_FLAGS = "-I#{INCLUDE} +warn_unused_vars +warn_unused_import -o ebin -W0 #{EXTRA_ERLC}"
 
-SRC        = FileList['src/*.erl']
+SRC        = FileList["src/*.erl"]
 SRC_OBJ    = SRC.pathmap("%{src,ebin}X.beam")
 
 TEST       = FileList['test/src/*.erl']
@@ -29,6 +33,12 @@ desc "Compile everything"
 task :compile   => ["src:compile", "test:compile"]
 task :recompile => ["clean", "src:compile", "test:compile"]
 
+task :compile_deps do
+  Dir["deps/*"].each do |dir|
+    sh "cd #{dir} && make"
+  end
+end
+
 namespace :src do
   desc "Compile src"
   task :compile => ['ebin'] + SRC_OBJ
@@ -48,7 +58,7 @@ task :run_tests => :compile do
     test_cmd = "erl -pa ebin -pa test/ebin -run #{mod} test -run init stop"
     test_output = `#{test_cmd}`
     
-    puts test_output #if Rake.application.options.trace
+    puts test_output if Rake.application.options.trace
 
     if /\*failed\*/ =~ test_output
       test_output[/(Failed.*Aborted.*Skipped.*Succeeded.*$)/]
@@ -91,5 +101,28 @@ end
 desc "Rebuild and repackage"
 task :repackage => [:build_boot_scripts] do  
   cmd = "erl -pa ./ebin -s packager start -s init stop"
+  Kernel.system cmd
+end
+
+desc "Build a basic app structure"
+task :make_skel do
+  require "fileutils"
+
+  puts "Setting up basic structure"
+  dirs = %w(deps doc ebin include priv scripts src support)
+  files = %w(LICENSE Makefile README Rakefile)
+  dirs.each {|d| FileUtils.mkdir_p d unless ::File.directory? d}
+  files.each {|d| FileUtils.touch d unless ::File.file? d}
+
+  puts "Setting up the test directory structure"
+  test_dir = Dir.pwd + "/test"
+  test_dirs = %w(ebin include src)
+  test_dirs.each do |dir|
+    full_dir = test_dir + "/#{dir}"
+    FileUtils.mkdir_p full_dir unless ::File.directory? full_dir
+  end
+  
+  puts "Including eunit"
+  cmd = "svn co http://svn.process-one.net/contribs/trunk/eunit #{test_dir}/include"
   Kernel.system cmd
 end

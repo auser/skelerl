@@ -43,7 +43,11 @@ class ErlMapper
   end
   
   def realize(force_testing=false)
-    contexts.collect {|mc| (force_testing || testing) ? mc.string : daemonize(mc.string) }
+    contexts.collect {|mc| (force_testing || testing) ? mc.string : launch(mc.string) }
+  end
+  
+  def launch(cmd)
+    Kernel.system cmd
   end
   
   def daemonize(cmd, &block)
