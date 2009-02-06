@@ -12,6 +12,9 @@ ERLC_FLAGS = "-I#{INCLUDE} +warn_unused_vars +warn_unused_import -o ebin -W0 #{E
 SRC        = FileList["src/*.erl"]
 SRC_OBJ    = SRC.pathmap("%{src,ebin}X.beam")
 
+DEP        = DEPS_FILES.map {|d| FileList["#{d}/src/*.erl"]}
+DEP_OBJ    = DEP.map {|d| d.pathmap("%{src,ebin}X.beam")}
+
 TEST       = FileList['test/src/*.erl']
 TEST_OBJ   = TEST.pathmap("%{src,ebin}X.beam")
 
@@ -33,9 +36,10 @@ desc "Compile everything"
 task :compile   => ["src:compile", "test:compile"]
 task :recompile => ["clean", "src:compile", "test:compile"]
 
+desc "Compile deps"
 task :compile_deps do
-  Dir["deps/*"].each do |dir|
-    sh "cd #{dir} && make"
+  DEPS_FILES.each do |dir|
+    Kernel.system "cd #{dir} && rake compile"
   end
 end
 
