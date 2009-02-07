@@ -114,6 +114,7 @@ end
 desc "Shell command"
 task :shell do
   cmd = "erl -pa ./ebin #{EXTRA_ERLC}"
+  Kernel.system cmd
 end
 
 desc "Build a basic app structure"
@@ -122,9 +123,12 @@ task :make_skel do
 
   puts "Setting up basic structure"
   dirs = %w(deps doc ebin include priv scripts src support)
-  files = %w(LICENSE Makefile README Rakefile)
+  files = %w(LICENSE Makefile README.txt Rakefile)
   dirs.each {|d| FileUtils.mkdir_p d unless ::File.directory? d}
   files.each {|d| FileUtils.touch d unless ::File.file? d}
+  
+  puts "Adding gitignore"
+  open(".gitignore", "w+") {|f| f << "*.beam\nerl_crash.dump"}
 
   puts "Setting up the test directory structure"
   test_dir = Dir.pwd + "/test"

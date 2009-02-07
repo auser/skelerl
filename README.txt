@@ -6,7 +6,7 @@ Skeleton Erlang application
 
 This is a basic skeleton for erlang applications.
 
-This skeleton app takes care of everything you'd need in an erlang application, hopefully. If not, list it on the wiki and we'll get to it.
+This skeleton app takes care of everything you'd need in an erlang application, hopefully!
 
 h2. Building an application
 1. Include the source code in the src/ directory. 
