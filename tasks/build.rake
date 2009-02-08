@@ -113,32 +113,20 @@ end
 
 desc "Shell command"
 task :shell do
-  cmd = "erl -pa ./ebin #{EXTRA_ERLC}"
+  cmd = "erl -pa ./ebin #{EXTRA_ERLC} -boot start_sasl"
   Kernel.system cmd
 end
 
-desc "Build a basic app structure"
-task :make_skel do
-  require "fileutils"
+desc "Update submodules"
+task :update do
+  cmd = "git submodule update"
+  DEPS_FILES.each do |dir|
+    Kernel.system "cd #{dir} && #{cmd}"
+  end  
+end
 
-  puts "Setting up basic structure"
-  dirs = %w(deps doc ebin include priv scripts src support)
-  files = %w(LICENSE Makefile README.txt Rakefile)
-  dirs.each {|d| FileUtils.mkdir_p d unless ::File.directory? d}
-  files.each {|d| FileUtils.touch d unless ::File.file? d}
-  
-  puts "Adding gitignore"
-  open(".gitignore", "w+") {|f| f << "*.beam\nerl_crash.dump"}
-
-  puts "Setting up the test directory structure"
-  test_dir = Dir.pwd + "/test"
-  test_dirs = %w(ebin include src)
-  test_dirs.each do |dir|
-    full_dir = test_dir + "/#{dir}"
-    FileUtils.mkdir_p full_dir unless ::File.directory? full_dir
-  end
-  
-  puts "Including eunit"
-  cmd = "svn co http://svn.process-one.net/contribs/trunk/eunit #{test_dir}/include"
+desc "Build eunit"
+task :build_eunit do
+  cmd =  "cd test/include/eunit && make"
   Kernel.system cmd
 end

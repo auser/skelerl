@@ -2,7 +2,7 @@ require 'skelerl'
 
 AUTHOR = 'Ari Lerner'  # can also be an array of Authors
 EMAIL = "arilerner@mac.com"
-DESCRIPTION = "This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... Check out the README for more!\n\n#{Time.now}"
+DESCRIPTION = "This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... Check out the README for more!\n\n\n#{Time.now}"
 GEM_NAME = 'skelerl' # what ppl will type to install your gem
 RUBYFORGE_PROJECT = 'skelerl' # The unix name for your project
 HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"

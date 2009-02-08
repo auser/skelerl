@@ -16,7 +16,7 @@ end
 module Skelerl
   
   module VERSION
-    STRING = "0.0.2"
+    STRING = "0.0.3"
   end
   
 end
