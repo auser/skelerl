@@ -130,3 +130,6 @@ task :build_eunit do
   cmd =  "cd test/include/eunit && make"
   Kernel.system cmd
 end
+
+desc "Compile and get a shell"
+task :compile_shell => [:compile, :shell]
