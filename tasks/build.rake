@@ -39,13 +39,6 @@ desc "Compile everything"
 task :compile   => ["src:compile", "test:compile"]
 task :recompile => ["clean", "src:compile", "test:compile"]
 
-desc "Compile deps"
-task :compile_deps do
-  DEPS_FILES.each do |dir|
-    Kernel.system "cd #{dir} && rake compile"
-  end
-end
-
 namespace :src do
   desc "Compile src"
   task :compile => ['ebin'] + SRC_OBJ
@@ -114,15 +107,27 @@ end
 desc "Shell command"
 task :shell do
   cmd = "erl -pa ./ebin #{EXTRA_ERLC} -boot start_sasl"
+  puts cmd if Rake.application.options.trace
   Kernel.system cmd
 end
 
-desc "Update submodules"
-task :update do
-  cmd = "git submodule update"
-  DEPS_FILES.each do |dir|
-    Kernel.system "cd #{dir} && #{cmd}"
-  end  
+namespace(:deps) do
+  desc "Compile deps"
+  task :compile_deps do
+    DEPS_FILES.each do |dir|
+      Kernel.system "cd #{dir} && rake compile"
+    end
+  end
+  
+  desc "Update deps/"
+  task :update do
+    update_cmd = "git pull" # "git fetch && git rebase origin/master"
+    DEPS_FILES.each do |dir|
+      cmd = "cd #{dir} && #{update_cmd}"
+      puts cmd if Rake.application.options.trace
+      Kernel.system cmd
+    end  
+  end
 end
 
 desc "Build eunit"
