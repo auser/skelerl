@@ -128,6 +128,9 @@ namespace(:deps) do
       Kernel.system cmd
     end  
   end
+  
+  desc "Update and compile deps/"
+  task :up => [:update, :compile]
 end
 
 desc "Build eunit"
