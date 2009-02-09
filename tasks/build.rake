@@ -113,7 +113,7 @@ end
 
 namespace(:deps) do
   desc "Compile deps"
-  task :compile_deps do
+  task :compile do
     DEPS_FILES.each do |dir|
       Kernel.system "cd #{dir} && rake compile"
     end
