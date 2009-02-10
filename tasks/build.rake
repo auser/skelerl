@@ -121,7 +121,7 @@ namespace(:deps) do
   
   desc "Update deps/"
   task :update do
-    update_cmd = "git pull" # "git fetch && git rebase origin/master"
+    update_cmd = "git remote update && git merge origin/master" # "git fetch && git rebase origin/master"
     DEPS_FILES.each do |dir|
       cmd = "cd #{dir} && #{update_cmd}"
       puts cmd if Rake.application.options.trace
