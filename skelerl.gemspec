@@ -2,12 +2,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{skelerl}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ari Lerner"]
   s.date = %q{2009-02-09}
-  s.description = %q{This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... Check out the README for more!   Mon Feb 09 17:50:16 -0800 2009}
+  s.description = %q{This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... Check out the README for more!   Mon Feb 09 18:49:15 -0800 2009}
   s.email = ["arilerner@mac.com"]
   s.executables = ["gen_server", "skelerl"]
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt", "generators/skeleton/templates/README.txt"]
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{skelerl}
   s.rubygems_version = %q{1.3.1}
-  s.summary = %q{This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... Check out the README for more!   Mon Feb 09 17:50:16 -0800 2009}
+  s.summary = %q{This skeleton app takes care of everything you'd need in an erlang application, but don't want to do yourself... Check out the README for more!   Mon Feb 09 18:49:15 -0800 2009}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
