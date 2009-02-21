@@ -131,6 +131,15 @@ namespace(:deps) do
   
   desc "Update and compile deps/"
   task :up => [:update, :compile]
+  
+  desc "Clean the deps"
+  task :clean do
+    DEPS_FILES.each do |dir|
+      cmd = "cd #{dir}/ebin && rm *.beam"
+      puts cmd if Rake.application.options.trace
+      Kernel.system cmd
+    end
+  end
 end
 
 desc "Build eunit"
