@@ -4,7 +4,7 @@ end
 
 require "rubygems"
 %w(dslify rubigen).each do |gem|
-  begin;require "#{gem}";rescue Exception => e;puts "Error: #{e}";end
+  begin;require gem;rescue Exception => e;puts "Error: #{e}";end
 end
 
 require "skelerl/init"
