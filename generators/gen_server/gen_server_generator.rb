@@ -18,8 +18,16 @@ class GenServerGenerator < RubiGen::Base
 
   def manifest
     record do |m|
-      m.file "gen_server.erl"
+      m.template "gen_server.erl", "src/#{gen_server_file_name}"
     end
+  end
+
+  def gen_server_file_name
+    "#{module_name}.erl"
+  end
+
+  def module_name
+    "#{name}_srv"
   end
 
   protected
