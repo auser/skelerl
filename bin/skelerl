@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+$:.unshift(File.dirname(__FILE__) + "/../lib")
 
 require 'rubygems'
 require 'rubigen'
@@ -14,4 +15,12 @@ source = RubiGen::PathSource.new(:application,
   File.join(File.dirname(__FILE__), "../generators"))
 RubiGen::Base.reset_sources
 RubiGen::Base.append_sources source
-RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'skeleton')
+
+# Different generators
+if ARGV.contains_similar_elements? %w(--gen_server gen_server gs)
+  RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'gen_server')
+elsif ARGV.contains_similar_elements? %w(--makefile make mf makefile)
+  RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'makefile')
+else
+  RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'skeleton')
+end
