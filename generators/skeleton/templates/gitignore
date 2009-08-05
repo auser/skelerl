@@ -1,2 +1,4 @@
 *.beam
 erl_crash.dump
+.erlang.cookie
+.DS_Store
