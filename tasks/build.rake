@@ -55,7 +55,8 @@ task :run_tests => :compile do
   TEST_OBJ.each do |obj|
     obj[%r{.*/(.*).beam}]
     mod = $1
-    test_cmd = "erl -pa ebin -pa test/ebin -run #{mod} test -run init stop"
+    test_cmd = "erl -pa ebin -pa test/ebin #{EXTRA_ERLC} -run #{mod} test -run init stop"
+    $stdout.puts test_cmd
     test_output = `#{test_cmd}`
     
     puts test_output if Rake.application.options.trace
@@ -69,6 +70,73 @@ task :run_tests => :compile do
     puts "#{mod}: #{$1}"
   end
 end
+
+class << self
+    %w{src ebin}.each do |type|
+        define_method "#{type}_dirs" do
+          Dir[Dir.pwd + "/#{type}"]  +
+          Dir[Dir.pwd + "/**/deps/**/#{type}"] +
+          Dir[Dir.pwd + "/test/#{type}"]
+        end
+    end
+end
+
+desc "Run all tests with coverage"
+task :coverage => :compile do
+  puts "Modules under test:"
+  TEST_OBJ.each do |obj|
+    obj[%r{.*/(.*).beam}]
+    mod = $1
+
+    FileUtils.mkdir(Dir.pwd + "/coverage") unless File.exists?(Dir.pwd + "/coverage")
+    compile = ebin_dirs.collect{|dir| "cover:compile_beam_directory(\"#{dir}\")," }.join("\n  ")
+    analyse = src_dirs.inject([]) do |mem,dir|
+      Dir[dir + "/*.erl"].each do |file|
+        base = File.basename(file, ".erl") 
+        mem << "cover:analyse_to_file(#{base}, \"coverage/#{base}.html\", [html]),"
+      end
+      mem
+    end.join("\n  ")
+
+    test_cmd =<<EOF
+
+erl +A 10 -sname #{$$} -pa ebin -pa test/ebin #{EXTRA_ERLC} -eval '
+  Module = list_to_atom (hd(init:get_plain_arguments())),
+  {value, {exports, E}} = lists:keysearch (exports,
+                                             1,
+                                             Module:module_info()),
+  case lists:member({test, 0}, E) of
+    true -> ok;
+    false -> io:format("error, ~p:test/0 not exported; " ++
+                        "possibly you do not have eunit installed~n",
+                        [Module]),
+             halt(77)
+  end,
+  #{compile}
+  io:format("~p:test () ...", [Module]),
+  ok = Module:test(),
+  #{analyse}
+  ok
+' -noshell -run init stop -extra "#{mod}"
+EOF
+
+    $stdout.puts test_cmd
+    test_output = `#{test_cmd}`
+    
+    puts test_output if Rake.application.options.trace
+
+    if /\*failed\*/ =~ test_output
+      test_output[/(Failed.*Aborted.*Skipped.*Succeeded.*$)/]
+    else
+      test_output[/1>\s*(.*)\n/]
+    end
+
+    puts "#{mod}: #{$1}"
+
+    exit 1 if /\*failed\*/ =~ test_output
+  end
+end
+
 
 desc "Clean the beams from the ebin directory"
 task :clean do
