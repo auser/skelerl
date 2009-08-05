@@ -39,6 +39,8 @@ class SkeletonGenerator < RubiGen::Base
       %w(ebin include src).each do |directory|
         m.directory "test/#{directory}"
       end
+
+      m.directory "priv/tasks"
       
       include_eunit
       include_configerl
