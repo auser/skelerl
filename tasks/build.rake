@@ -87,6 +87,7 @@ task :coverage => :compile do
   TEST_OBJ.each do |obj|
     obj[%r{.*/(.*).beam}]
     mod = $1
+    next if ENV['MODULE'] && mod != ENV['MODULE']
 
     FileUtils.mkdir(Dir.pwd + "/coverage") unless File.exists?(Dir.pwd + "/coverage")
     compile = ebin_dirs.collect{|dir| "cover:compile_beam_directory(\"#{dir}\")," }.join("\n  ")
@@ -120,7 +121,7 @@ erl +A 10 -sname #{$$} -pa ebin -pa test/ebin #{EXTRA_ERLC} -eval '
 ' -noshell -run init stop -extra "#{mod}"
 EOF
 
-    $stdout.puts test_cmd
+    # $stdout.puts test_cmd
     test_output = `#{test_cmd}`
     
     puts test_output if Rake.application.options.trace
@@ -158,7 +159,8 @@ desc "Rebuild the boot scripts"
 task :build_boot_scripts => [:recompile] do
   puts "Rebuilding boot scripts"
   
-  root_dir = ::File.expand_path( ::File.join(::File.dirname(__FILE__)) )
+  rakefile, location = Rake.application.find_rakefile_location
+  root_dir = ::File.expand_path( ::File.join(location) )
   @version = ENV["VERSION"] || ENV["V"] || "0.1"
   @name = ENV["NAME"] || ::File.basename(::File.dirname( root_dir ))
   
@@ -218,3 +220,15 @@ end
 
 desc "Compile and get a shell"
 task :compile_shell => [:compile, :shell]
+
+desc "Generate ctags"
+task :ctags do
+    ctags_cmd =  "ctags -R --language-force=Erlang -F tags src/ deps/*/src test/src"
+    puts ctags_cmd
+    exec ctags_cmd
+end
+
+desc "Generate Documentation"
+task :doc do
+    sh("cd doc && erl -noshell -run edoc files ../#{SRC.join(" ../")} -run init stop")
+end
