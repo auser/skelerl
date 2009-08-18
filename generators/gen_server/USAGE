@@ -1,7 +1,7 @@
 Description:
 
-Create a skeleton gen_server file
-  
+Create a skeleton erlang directory with eunit tests and config helpers
+
 Usage:
   
-./script/generate gen_server <name>
+skelerl gen_server <name>

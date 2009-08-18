@@ -1,17 +1,60 @@
 #!/usr/bin/env ruby
+Dir[File.dirname(__FILE__) + "/../vendor/gems/*"].each {|lib| $:.unshift( File.expand_path(lib + "/lib") )}
+require "git-style-binary"
+require "colors"
+require 'git-style-binary/command'
 
-require 'rubygems'
-require 'rubigen'
-require "skelerl"
+GitStyleBinary.primary do  
+  @theme = :short
+  
+  config = YAML.load(File.read(File.dirname(__FILE__) + '/../VERSION.yml'))
+  version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
+  
+  version "Skelerl release: #{version}"
+  banner <<-EOS
+Usage: #{$0} #{all_options_string} COMMAND [ARGS]
 
-if %w(-v --version).include? ARGV.first
-  puts "#{File.basename($0)} #{Skelerl::VERSION::STRING}"
-  exit(0)
+The skelerl subcommands commands are:
+  \#{GitStyleBinary.pretty_known_subcommands(:short).join("  ")}
+
+See 'skelerl help COMMAND' for more information on a specific command.
+EOS
+  
+  run do |command|
+    subcommands = GitStyleBinary.list_subcommands
+    
+    puts "Usage: skelerl COMMAND [ARGS]
+    
+    The skelerl subcommands commands are:
+      #{subcommands}
+
+    See 'skelerl help COMMAND' for more information on a specific command"
+  end
 end
 
-require 'rubigen/scripts/generate'
-source = RubiGen::PathSource.new(:application, 
-  File.join(File.dirname(__FILE__), "../generators"))
-RubiGen::Base.reset_sources
-RubiGen::Base.append_sources source
-RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'skeleton')
+# #!/usr/bin/env ruby
+# $:.unshift(File.dirname(__FILE__) + "/../lib")
+# 
+# require 'rubygems'
+# require 'rubigen'
+# require "skelerl"
+# 
+# if %w(-v --version).include? ARGV.first
+#   puts "#{File.basename($0)} #{Skelerl::VERSION::STRING}"
+#   exit(0)
+# end
+# 
+# require 'rubigen/scripts/generate'
+# source = RubiGen::PathSource.new(:application, 
+#   File.join(File.dirname(__FILE__), "../generators"))
+# RubiGen::Base.reset_sources
+# RubiGen::Base.append_sources source
+# 
+# # Different generators
+# if ARGV.contains_similar_elements? %w(--gen_server gen_server gs)
+#   RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'gen_server')
+# elsif ARGV.contains_similar_elements? %w(--makefile make mf makefile)
+#   RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'makefile')
+# else
+#   RubiGen::Scripts::Generate.new.run(ARGV, :generator => 'skeleton')
+# end

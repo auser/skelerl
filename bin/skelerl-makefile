@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+Dir[File.dirname(__FILE__) + "/../vendor/gems/*"].each {|lib| $:.unshift( File.expand_path(lib + "/lib") )}
+require 'git-style-binary/command'
+require "rubigen"
+require 'rubigen/scripts/generate'
+
+GitStyleBinary.command do
+  banner <<-EOS
+Usage: #{$0} #{all_options_string}
+
+  Create a Makefile and application skeleton
+EOS
+
+  short_desc "Create a makefile"
+  
+  opt :name, "The basename of the makefile application to generate", :type => :string
+
+  run do |command|
+        
+    source = RubiGen::PathSource.new(:application, File.join(File.dirname(__FILE__), "../generators"))
+    RubiGen::Base.reset_sources
+    RubiGen::Base.append_sources source
+    
+    argv = [command[:name]]
+    
+    RubiGen::Scripts::Generate.new.run(argv, :generator => 'makefile')
+    
+  end
+end

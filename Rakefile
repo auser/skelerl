@@ -1,7 +1,11 @@
+require 'config/requirements'
+
 begin
-  require 'config/requirements'
-  require 'config/hoe' # setup Hoe + all gem configuration
-rescue Exception => e
+  require 'hanna/rdoctask'
+rescue LoadError => e
+  require "rake/rdoctask"
 end
+
+require 'config/jeweler' # setup gem configuration
 
 Dir['tasks/**/*.rake'].each { |rake| load rake }

@@ -1,0 +1,5 @@
+Description:
+  Creates a makefile project with a bootscript generator
+  
+Usage:
+  ./script/generate makefile <name>
