@@ -5,7 +5,7 @@
 %%% Created     : <%= Time.now.strftime("%F") %>
 %%%-------------------------------------------------------------------
 
--module ().
+-module (<%= module_name %>).
 -behaviour(gen_server).
 
 %% API
@@ -19,7 +19,6 @@
         
         }).
 
--define(SERVER, ?MODULE).
 %% Macros
 -define(SERVER, ?MODULE).
 -define(DEFAULT_CONFIG, {}).
