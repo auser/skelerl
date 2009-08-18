@@ -10,8 +10,11 @@ class MakefileGenerator < RubiGen::Base
   def initialize(runtime_args, runtime_options = {})
     super
     usage if args.empty?
-    @app_name = args.shift
-    @destination_root = File.expand_path(".")
+    # @app_name = args.shift
+    # @destination_root = File.expand_path(".")
+    @destination_root = args.shift
+    @app_name     = File.basename(File.expand_path(@destination_root))
+    
     @name = base_name    
     extract_options
   end
