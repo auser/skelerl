@@ -9,7 +9,7 @@
 -behaviour(gen_server).
 % -include_lib("../include/defines.hrl").
 
--export([start/0, start/1]).
+-export([start/0]).
 
 % gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
@@ -48,7 +48,7 @@ start_link(Config) ->
 %% Description: Initiates the server
 %%--------------------------------------------------------------------
 
-init([]) -> 
+init(Args) -> 
     {ok, todo_state}.
 
 %%--------------------------------------------------------------------
