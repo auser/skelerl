@@ -162,9 +162,10 @@ task :build_boot_scripts => [:recompile] do
   rakefile, location = Rake.application.find_rakefile_location
   root_dir = ::File.expand_path( ::File.join(location) )
   @version = ENV["VERSION"] || ENV["V"] || "0.1"
-  @name = ENV["NAME"] || ::File.basename(::File.dirname( root_dir ))
+  @name = ENV["NAME"] || ::File.basename(root_dir)
   
   cmd = "erl -pa ./ebin/ -run packager start #{@name} #{@version} -run init stop -noshell"
+  puts cmd
   Kernel.system cmd
 end
 
