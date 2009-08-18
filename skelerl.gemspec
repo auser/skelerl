@@ -5,14 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{skelerl}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ari Lerner", "Michael Fairchild", "Nate Murray"]
   s.date = %q{2009-08-17}
   s.description = %q{Erlang skeleton application}
   s.email = %q{arilerner@mac.com}
-  s.executables = ["gen_server", "makefile", "skelerl"]
+  s.executables = ["gen_server", "makefile", "skelerl", "skelerl-gen_server", "skelerl-makefile"]
   s.extra_rdoc_files = [
     "History.txt",
      "README.txt"
@@ -23,6 +23,8 @@ Gem::Specification.new do |s|
      "bin/gen_server",
      "bin/makefile",
      "bin/skelerl",
+     "bin/skelerl-gen_server",
+     "bin/skelerl-makefile",
      "config/jeweler.rb",
      "config/requirements.rb",
      "generators/appfile/USAGE",
