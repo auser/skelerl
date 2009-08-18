@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{skelerl}
-  s.version = "0.0.5"
+  s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ari Lerner", "Michael Fairchild", "Nate Murray"]
-  s.date = %q{2009-08-17}
+  s.date = %q{2009-08-18}
   s.description = %q{Erlang skeleton application}
   s.email = %q{arilerner@mac.com}
   s.executables = ["gen_server", "makefile", "skelerl", "skelerl-gen_server", "skelerl-makefile"]
