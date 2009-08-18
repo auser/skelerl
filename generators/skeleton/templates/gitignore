@@ -1,4 +1,16 @@
 *.beam
 erl_crash.dump
+html
 .erlang.cookie
+.autosession.vim
 .DS_Store
+tags
+coverage
+.session.vim
+*-ttb
+*-ttb.ti
+doc/edoc-info
+doc/erlang.png
+doc/*.html
+doc/stylesheet.css
+.dialyzer_plt
