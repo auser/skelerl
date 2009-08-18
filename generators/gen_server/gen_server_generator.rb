@@ -24,6 +24,7 @@ class GenServerGenerator < RubiGen::Base
     windows            = (RUBY_PLATFORM =~ /dos|win32|cygwin/i) || (RUBY_PLATFORM =~ /(:?mswin|mingw)/)
     
     record do |m|
+      m.directory File.join("src")
       m.template "gen_server.erl", "src/#{gen_server_file_name}"
     end
   end
@@ -33,7 +34,7 @@ class GenServerGenerator < RubiGen::Base
   end
 
   def module_name
-    "#{name}_srv"
+    "#{app_name}_srv"
   end
 
   protected

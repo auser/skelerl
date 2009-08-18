@@ -4,4 +4,4 @@ Create a skeleton erlang directory with eunit tests and config helpers
 
 Usage:
   
-./script/generate skeleton <name>
+skelerl gen_server <name>
