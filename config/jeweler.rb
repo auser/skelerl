@@ -23,7 +23,7 @@ end
     
     s.test_files = Dir["test/**/test_*.rb"]
 
-    s.files = (%w(Rakefile README.rdoc License.txt VERSION.yml) + Dir["{config,tasks,script,generators,bin}/**/*"])
+    s.files = (%w(Rakefile README.rdoc License.txt VERSION.yml) + Dir["{config,tasks,script,generators,lib,bin}/**/*"])
     
     s.files.exclude '**/*.beam'
     s.files.exclude "**/*/erl_crash.dump"

@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
      "generators/skeleton/templates/README.txt",
      "generators/skeleton/templates/Rakefile",
      "generators/skeleton/templates/gitignore",
+     "lib/skelerl.rb",
      "script/generate",
      "tasks/build.rake",
      "tasks/environment.rake",
